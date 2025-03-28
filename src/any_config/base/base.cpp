@@ -19,36 +19,36 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <any_config/base/base.hpp>
+#include <any_config/base/config.hpp>
 
 #include <tier1/keyvalues3.h>
 
-KeyValues3 *AnyConfig::CBase::Get()
+KeyValues3 *AnyConfig::CConfig::Get()
 {
 	return m_pRoot;
 }
 
-const KeyValues3 *AnyConfig::CBase::Get() const
+const KeyValues3 *AnyConfig::CConfig::Get() const
 {
 	return m_pRoot;
 }
 
-AnyConfig::CBase::CBase()
+AnyConfig::CConfig::CConfig()
  :  m_pRoot(new KeyValues3(KV3_TYPEEX_INVALID, KV3_SUBTYPE_INVALID))
 {
 }
 
-AnyConfig::CBase::CBase(KeyValues3 *pRoot)
+AnyConfig::CConfig::CConfig(KeyValues3 *pRoot)
  :  m_pRoot(pRoot)
 {
 }
 
-AnyConfig::CBase::~CBase()
+AnyConfig::CConfig::~CConfig()
 {
 	delete m_pRoot;
 }
 
-void AnyConfig::CBase::DebugPrint()
+void AnyConfig::CConfig::DebugPrint()
 {
 	DebugPrintKV3(m_pRoot);
 }

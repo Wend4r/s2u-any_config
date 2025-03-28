@@ -28,6 +28,8 @@
 
 namespace AnyConfig
 {
+	// Add something JSON related here.
+	// ...
 }; // AnyConfig
 
 #endif // _INCLUDE_ANY_CONFIG_JSON_TYPES_HPP_

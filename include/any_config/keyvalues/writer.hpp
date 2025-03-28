@@ -31,16 +31,16 @@
 namespace AnyConfig
 {
 	template<class T, class O>
-	struct CSaveAsKV1Text_t : public CLoadTo_t<T>, 
-	                          public CError_t, 
-	                          public COutput_t<O>, 
-	                          public CKV1TextEscape_t
+	struct CSaveAsKV1Text_t : public LoadTo_t<T>, 
+	                          public Error_t, 
+	                          public Output_t<O>, 
+	                          public KV1TextEscape_t
 	{
 		CSaveAsKV1Text_t(const T &aInitContext, CUtlString *psInitMessage, const O &aInitOutput, KV1TextEscapeBehavior_t eInitBehavior)
-		 :  CLoadTo_t<T>{aInitContext}, 
-		    CError_t{psInitMessage}, 
-		    COutput_t<O>{aInitOutput}, 
-		    CKV1TextEscape_t{eInitBehavior}
+		 :  LoadTo_t<T>{aInitContext}, 
+		    Error_t{psInitMessage}, 
+		    Output_t<O>{aInitOutput}, 
+		    KV1TextEscape_t{eInitBehavior}
 		{
 		}
 
@@ -57,8 +57,8 @@ namespace AnyConfig
 	}; // ISaveAsKV1Text
 
 	template<class T>
-	class CSaveAsKV1TextBase : public T, 
-	                           public ISaveAsKV1Text
+	class CSaveAsKV1TextBase : public ISaveAsKV1Text, 
+	                           public T
 	{
 	public:
 		using Base_t = T;
@@ -69,12 +69,12 @@ namespace AnyConfig
 		}
 	}; // CSaveAsKV1TextBase<T>
 
-	using SaveAsKV1TextLegacy_t = CSaveAsKV1TextBase<CSaveAsKV1Text_t<KeyValues3 *, CUtlBuffer *>>;
+	using SaveAsKV1TextBase_t = CSaveAsKV1TextBase<CSaveAsKV1Text_t<KeyValues3 *, CUtlBuffer *>>;
 
-	class SaveAsKV1Text_t : public SaveAsKV1TextLegacy_t
+	class SaveAsKV1Text_t : public SaveAsKV1TextBase_t
 	{
 	public:
-		using Base_t = SaveAsKV1TextLegacy_t;
+		using Base_t = SaveAsKV1TextBase_t;
 
 		SaveAsKV1Text_t(const Base_t::Base_t &aInit)
 		 :  Base_t(aInit)
@@ -82,36 +82,43 @@ namespace AnyConfig
 		}
 
 	public: // ISaveAsKV1Text
-		bool SaveAsKV1Text();
+		bool SaveAsKV1Text() override;
 	}; // SaveAsKV1Text_t
 
-	using SaveAsKV1TextLegacy_NoContext_t = CNoContextBase<CSaveAsKV1Text_t<CEmpty_t, CUtlBuffer *>>;
+	using SaveAsKV1TextNoContext_t = CNoContextBase<CSaveAsKV1Text_t<Empty_t, CUtlBuffer *>>;
 
-	class SaveAsKV1Text_NoContext_t : public SaveAsKV1TextLegacy_NoContext_t
+	class CSaveAsKV1Text_NoContext : public SaveAsKV1TextNoContext_t
 	{
 	public:
-		using Base_t = SaveAsKV1TextLegacy_NoContext_t;
+		using Base_t = SaveAsKV1TextNoContext_t;
 
-		SaveAsKV1Text_NoContext_t(const Base_t::Base_t &aInit)
+		CSaveAsKV1Text_NoContext(const Base_t::Base_t &aInit)
 		 :  Base_t(aInit)
 		{
 		}
 
-		SaveAsKV1Text_NoContext_t(const Save_Generic_t::Base_t &aInit);
-	}; // SaveAsKV1Text_NoContext_t
+		CSaveAsKV1Text_NoContext(const CSave_General::Base_t &aInit);
+	}; // CSaveAsKV1Text_NoContext
+
+	class SaveAsKV1Text_NoContext final : public CSaveAsKV1Text_NoContext
+	{
+	public:
+		using CBase = CSaveAsKV1Text_NoContext;
+		using CBase::CBase;
+	}; // SaveAsKV1Text_NoContext
 
 	template<class T, class O, class P>
 	struct CSaveAsKV1Text_Translated_t : public CSaveAsKV1Text_t<T, O>, 
-	                                     public CKV1Unk_t<bool>, 
-	                                     public CKV1Proccessor_t<P>
+	                                     public KV1Unk_t<int>, 
+	                                     public KV1Proccessor_t<P>
 	{
 	public:
 		using Base_t = CSaveAsKV1Text_t<T, O>;
 
-		CSaveAsKV1Text_Translated_t(const Base_t &aInit, bool bInitUnk, const P &aInitProcessor)
+		CSaveAsKV1Text_Translated_t(const Base_t &aInit, int nInitUnk, const P &aInitProcessor)
 		 :  Base_t{aInit}, 
-		    CKV1Unk_t<bool>{bInitUnk}, 
-		    CKV1Proccessor_t<P>{aInitProcessor}
+		    KV1Unk_t<int>{nInitUnk}, 
+		    KV1Proccessor_t<P>{aInitProcessor}
 		{
 		}
 
@@ -124,8 +131,8 @@ namespace AnyConfig
 	}; // ISaveAsKV1Text_Translated
 
 	template<class T>
-	class CSaveAsKV1TextBase_Translated : public T, 
-	                                      public ISaveAsKV1Text
+	class CSaveAsKV1TextBase_Translated : public ISaveAsKV1Text_Translated, 
+	                                      public T
 	{
 	public:
 		using Base_t = T;
@@ -136,49 +143,63 @@ namespace AnyConfig
 		}
 	}; // CSaveAsKV1TextBase_Translated<T>
 
-	using SaveAsKV1TextLegacy_Translated_t = CSaveAsKV1TextBase_Translated<CSaveAsKV1Text_Translated_t<KeyValues3 *, CUtlBuffer *, KV3ToKV1Translation_t *>>;
+	using SaveAsKV1TextTranslated_t = CSaveAsKV1TextBase_Translated<CSaveAsKV1Text_Translated_t<KeyValues3 *, CUtlBuffer *, KV3ToKV1Translation_t *>>;
 
-	class SaveAsKV1Text_Translated_t : public SaveAsKV1TextLegacy_Translated_t
+	class CSaveAsKV1Text_Translated : public SaveAsKV1TextTranslated_t
 	{
 	public:
-		using Base_t = SaveAsKV1TextLegacy_Translated_t;
+		using Base_t = SaveAsKV1TextTranslated_t;
 
-		SaveAsKV1Text_Translated_t(const Base_t::Base_t &aInit)
+		CSaveAsKV1Text_Translated(const Base_t::Base_t &aInit)
 		 :  Base_t(aInit)
 		{
 		}
 
-	public: // 
-		bool SaveAsKV1Text_Translated();
-	}; // SaveAsKV1Text_Translated_t
+	public:
+		bool SaveAsKV1Text_Translated() override;
+	}; // CSaveAsKV1Text_Translated
 
-	using SaveAsKV1TextLegacy_Translated_NoContext_t = CNoContextBase<CSaveAsKV1Text_Translated_t<CEmpty_t, CUtlBuffer *, KV3ToKV1Translation_t *>>;
-
-	class SaveAsKV1Text_Translated_NoContext_t : public SaveAsKV1TextLegacy_Translated_NoContext_t
+	class SaveAsKV1Text_Translated final : public CSaveAsKV1Text_Translated
 	{
 	public:
-		using Base_t = SaveAsKV1TextLegacy_Translated_NoContext_t;
+		using CBase = CSaveAsKV1Text_Translated;
+		using CBase::CBase;
+	};
 
-		SaveAsKV1Text_Translated_NoContext_t(const Base_t::Base_t &aInit)
+	using SaveAsKV1TextTranslated_NoContext_t = CNoContextBase<CSaveAsKV1Text_Translated_t<Empty_t, CUtlBuffer *, KV3ToKV1Translation_t *>>;
+
+	class CSaveAsKV1Text_Translated_NoContext : public SaveAsKV1TextTranslated_NoContext_t
+	{
+	public:
+		using Base_t = SaveAsKV1TextTranslated_NoContext_t;
+
+		CSaveAsKV1Text_Translated_NoContext(const Base_t::Base_t &aInit)
 		 :  Base_t(aInit)
 		{
 		}
-	}; // SaveAsKV1Text_Translated_NoContext_t
+	}; // CSaveAsKV1Text_Translated_NoContext
 
-	class CKeyValuesWriter : public CWriterBase<CBase>
+	class SaveAsKV1Text_Translated_NoContext final : public CSaveAsKV1Text_Translated_NoContext
 	{
-	public: // IBaseWriter<Save_Generic_t>
-		bool Save(const Save_Generic_t &aParams);
+	public:
+		using CBase = CSaveAsKV1Text_Translated_NoContext;
+		using CBase::CBase;
+	};
 
-	public: // IBaseWriter<SaveToFile_Generic_t>
-		bool Save(const SaveToFile_Generic_t &aParams);
+	class CKeyValuesWriter : public CWriterBase<CConfig>
+	{
+	public: // IBaseWriter<CSave_General>
+		bool Save(const CSave_General &aParams);
+
+	public: // IBaseWriter<CSaveToFile_General>
+		bool Save(const CSaveToFile_General &aParams);
 
 	public:
 		//
 		// Save ones (members).
 		//
-		bool SaveAsKV1Text(const SaveAsKV1Text_NoContext_t &aParams) const;
-		bool SaveAsKV1Text_Translated(const SaveAsKV1Text_Translated_NoContext_t &aParams) const;
+		bool SaveAsKV1Text(const CSaveAsKV1Text_NoContext &aParams) const;
+		bool SaveAsKV1Text_Translated(const CSaveAsKV1Text_Translated_NoContext &aParams) const;
 	}; // CKeyValuesWriter
 }; // AnyConfig
 

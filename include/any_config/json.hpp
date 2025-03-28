@@ -31,12 +31,18 @@
 
 namespace AnyConfig
 {
-	class JSON : virtual public CJSONReader, virtual public CJSONWriter
+	class CJSON : virtual public CJSONReader, virtual public CJSONWriter
 	{
 	public:
 		static constexpr const char sm_szFileExtensionJSON[] = ".json";
 
 		FileExtension::CCheck<sm_szFileExtensionJSON> m_aCheckFileExtension;
+	}; // CJSON
+
+	class JSON final : CJSON
+	{
+	public:
+		using CJSON::CJSON;
 	}; // JSON
 }; // AnyConfig
 

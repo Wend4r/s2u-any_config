@@ -32,26 +32,32 @@ class KeyValues3;
 
 namespace AnyConfig
 {
-	class Anyone final : virtual public Base, 
-	                     virtual public JSON, 
-	                     virtual public KeyValues
+	class CAnyone : virtual public CBase, 
+	                virtual public CJSON, 
+	                virtual public CKeyValues
 	{
 	public:
-		Anyone();
-		Anyone(KeyValues3 *pRoot);
+		CAnyone();
+		CAnyone(KeyValues3 *pRoot);
 
-	public: // IBaseReader<Load_Generic_t>
-		bool Load(const Load_Generic_t &aParams);
+	public: // IBaseReader<CLoad_General>
+		bool Load(const CLoad_General &aParams);
 
-	public: // IBaseReader<LoadFromFile_Generic_t>
-		bool Load(const LoadFromFile_Generic_t &aParams);
+	public: // IBaseReader<CLoadFromFile_General>
+		bool Load(const CLoadFromFile_General &aParams);
 
-	public: // IBaseWriter<Save_Generic_t>
-		bool Save(const Save_Generic_t &aParams);
+	public: // IBaseWriter<CSave_General>
+		bool Save(const CSave_General &aParams);
 
-	public: // IBaseWriter<SaveToFile_Generic_t>
-		bool Save(const SaveToFile_Generic_t &aParams);
-	}; // AnyConfig
+	public: // IBaseWriter<CSaveToFile_General>
+		bool Save(const CSaveToFile_General &aParams);
+	}; // CAnyone
+
+	class Anyone final : public CAnyone
+	{
+	public:
+		using CAnyone::CAnyone;
+	};
 }; // AnyConfig
 
 #endif // _INCLUDE_ANY_CONFIG_HPP_

@@ -25,52 +25,49 @@
 #include <tier0/keyvalues3.h>
 #include <tier0/utlstring.h>
 
-AnyConfig::SaveJSON_NoContext_t::SaveJSON_NoContext_t(const Save_Generic_t::Base_t &aInit)
- :  SaveJSON_NoContext_t({aInit.m_psMessage, aInit.COutput_t<CUtlBuffer *>::m_aData})
+AnyConfig::CSaveJSON_NoContext::CSaveJSON_NoContext(const CSave_General::Base_t &aInit)
+ :  CSaveJSON_NoContext({aInit.m_psMessage, aInit.Output_t<CUtlBuffer *>::m_aData})
 {
 }
 
-bool AnyConfig::SaveJSON_t::SaveJSON()
+bool AnyConfig::CSaveJSON::SaveJSON()
 {
-	return SaveKV3AsJSON(CSaveFrom_t<KeyValues3 *>::m_aData, 
+	return SaveKV3AsJSON(SaveFrom_t<KeyValues3 *>::m_aData, 
 	                     m_psMessage, 
-	                     COutput_t<CUtlBuffer *>::m_aData);
+	                     Output_t<CUtlBuffer *>::m_aData);
 }
 
-bool AnyConfig::SaveJSON2_t::SaveJSON2()
+bool AnyConfig::CSaveJSON2::SaveJSON()
 {
-	return SaveKV3AsJSON(CSaveFrom_t<KeyValues3 *>::m_aData, 
+	return SaveKV3AsJSON(SaveFrom_t<KeyValues3 *>::m_aData, 
 	                     m_psMessage, 
-	                     COutput_t<CUtlString *>::m_aData);
+	                     Output_t<CUtlString *>::m_aData);
 }
 
-bool AnyConfig::CJSONWriter::Save(const Save_Generic_t &aParams)
+bool AnyConfig::CJSONWriter::Save(const CSave_General &aParams)
 {
-	return SaveJSON(aParams.To<SaveJSON_NoContext_t>());
+	return SaveJSON(aParams.To<CSaveJSON_NoContext>());
 }
 
-bool AnyConfig::CJSONWriter::Save(const SaveToFile_Generic_t &aParams)
+bool AnyConfig::CJSONWriter::Save(const CSaveToFile_General &aParams)
 {
 	static const char *s_pszMessageConcat[] = {"<", "Save", "  JSON", " to file", ": ", "Not supported now", ">"};
 
-	CBufferStringN<256> sMessage;
-
-	sMessage.AppendConcat(sizeof(s_pszMessageConcat) / sizeof(*s_pszMessageConcat), s_pszMessageConcat, NULL);
-	*aParams.m_psMessage = sMessage;
+	*aParams.m_psMessage = CBufferStringN<256>(s_pszMessageConcat);
 
 	return false;
 }
 
-bool AnyConfig::CJSONWriter::SaveJSON(const SaveJSON_NoContext_t &aParams) const
+bool AnyConfig::CJSONWriter::SaveJSON(const CSaveJSON_NoContext &aParams) const
 {
 	return SaveKV3AsJSON(Get(), 
 	                     aParams.m_psMessage, 
-	                     aParams.COutput_t<CUtlBuffer *>::m_aData);
+	                     aParams.Output_t<CUtlBuffer *>::m_aData);
 }
 
-bool AnyConfig::CJSONWriter::SaveJSON(const SaveJSON2_NoContext_t &aParams) const
+bool AnyConfig::CJSONWriter::SaveJSON(const CSaveJSON2_NoContext &aParams) const
 {
 	return SaveKV3AsJSON(Get(), 
 	                     aParams.m_psMessage, 
-	                     aParams.COutput_t<CUtlString *>::m_aData);
+	                     aParams.Output_t<CUtlString *>::m_aData);
 }

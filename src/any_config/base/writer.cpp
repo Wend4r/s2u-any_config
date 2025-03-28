@@ -23,17 +23,17 @@
 
 #include <tier0/keyvalues3.h>
 
-bool AnyConfig::Save_t::Save()
+bool AnyConfig::CSave::Save()
 {
 	return SaveKV3(m_aEncoding, 
 	               m_aFormat, 
-	               CSaveFrom_t<KeyValues3 *>::m_aData, 
+	               SaveFrom_t<KeyValues3 *>::m_aData, 
 	               m_psMessage, 
-	               COutput_t<CUtlBuffer *>::m_aData, 
+	               Output_t<CUtlBuffer *>::m_aData, 
 	               m_uFlags);
 }
 
-bool AnyConfig::SaveToFile_t::SaveToFile()
+bool AnyConfig::CSaveToFile::SaveToFile()
 {
 	return SaveKV3ToFile(m_aEncoding, 
 	                     m_aFormat, 
@@ -45,37 +45,37 @@ bool AnyConfig::SaveToFile_t::SaveToFile()
 }
 
 AnyConfig::CBaseWriter::CBaseWriter()
- :  CBase()
+ :  CConfig()
 {
 }
 
 
 AnyConfig::CBaseWriter::CBaseWriter(KeyValues3 *pRoot)
- :  CBase(pRoot)
+ :  CConfig(pRoot)
 {
 }
 
-bool AnyConfig::CBaseWriter::Save(const Save_Generic_t &aParams)
+bool AnyConfig::CBaseWriter::Save(const CSave_General &aParams)
 {
 	return const_cast<const CBaseWriter *>(this)->Save(aParams.ToBase());
 }
 
-bool AnyConfig::CBaseWriter::Save(const SaveToFile_Generic_t &aParams)
+bool AnyConfig::CBaseWriter::Save(const CSaveToFile_General &aParams)
 {
 	return SaveToFile(aParams.ToBase());
 }
 
-bool AnyConfig::CBaseWriter::Save(const Save_NoContext_t &aParams) const
+bool AnyConfig::CBaseWriter::Save(const CSave_NoContext &aParams) const
 {
 	return SaveKV3(aParams.m_aEncoding, 
 	               aParams.m_aFormat, 
 	               Get(), 
 	               aParams.m_psMessage, 
-	               aParams.COutput_t<CUtlBuffer *>::m_aData, 
+	               aParams.Output_t<CUtlBuffer *>::m_aData, 
 	               aParams.m_uFlags);
 }
 
-bool AnyConfig::CBaseWriter::SaveToFile(const SaveToFile_NoContext_t &aParams) const
+bool AnyConfig::CBaseWriter::SaveToFile(const CSaveToFile_NoContext &aParams) const
 {
 	return SaveKV3ToFile(aParams.m_aEncoding, 
 	                     aParams.m_aFormat, 

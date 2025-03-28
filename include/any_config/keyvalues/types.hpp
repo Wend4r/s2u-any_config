@@ -30,21 +30,21 @@
 
 namespace AnyConfig
 {
-	struct CKV1TextEscape_t
+	struct KV1TextEscape_t
 	{
 		KV1TextEscapeBehavior_t m_eBehavior;
-	}; // CKV1TextEscape_t
+	}; // KV1TextEscape_t
 
 	template<typename T>
-	struct CKV1Unk_t
+	struct KV1Unk_t
 	{
 		T m_aValue;
-	}; // CKV1Unk_t<T>
+	}; // KV1Unk_t<T>
 
 	template<class T>
-	struct CKV1Proccessor_t : public CIO_t<const T>
+	struct KV1Proccessor_t : public IO_t<const T>
 	{
-	}; // CKV1Proccessor_t<T>
+	}; // KV1Proccessor_t<T>
 }; // AnyConfig
 
 #endif // _INCLUDE_ANY_CONFIG_KEYVALUES_TYPES_HPP_

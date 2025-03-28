@@ -24,51 +24,51 @@
 
 #pragma once
 
-#include "base.hpp"
+#include "config.hpp"
 #include "ireader.hpp"
 #include "types.hpp"
 
 namespace AnyConfig
 {
 	template<class T, typename I>
-	struct CLoadBase_t : public CLoadTo_t<T>, 
-	                     public CError_t, 
-	                     public CInput_t<I>
+	struct LoadBase_t : public LoadTo_t<T>, 
+	                    public Error_t, 
+	                    public Input_t<I>
 	{
 	public:
-		CLoadBase_t(const T &aInitContext, CUtlString *psInitMessage, const I &aInitInput)
-		 :  CLoadTo_t<T>{aInitContext}, 
-		    CError_t{psInitMessage}, 
-		    CInput_t<I>{aInitInput}
+		LoadBase_t(const T &aInitContext, CUtlString *psInitMessage, const I &aInitInput)
+		 :  LoadTo_t<T>{aInitContext}, 
+		    Error_t{psInitMessage}, 
+		    Input_t<I>{aInitInput}
 		{
 		}
 
-		CLoadBase_t(CUtlString *psInitMessage, const I &aInitInput)
-		 :  CLoadBase_t({}, psInitMessage, aInitInput)
+		LoadBase_t(CUtlString *psInitMessage, const I &aInitInput)
+		 :  LoadBase_t({}, psInitMessage, aInitInput)
 		{
 		}
-	}; // CLoadBase_t<T, I>
+	}; // LoadBase_t<T, I>
 
 	template<class T, typename I>
-	struct CLoad_t : public CLoadBase_t<T, I>, 
-	                 public CFormat_t, 
-	                 public CLoadRoot_t
+	struct Load_t : public LoadBase_t<T, I>, 
+	                public Format_t, 
+	                public LoadRoot_t
 	{
 	public:
-		using Base_t = CLoadBase_t<T, I>;
+		using Base_t = LoadBase_t<T, I>;
 
-		CLoad_t(const Base_t &aInitBase, const KV3ID_t &aInitFormat, const char *pszInitRoot)
-		 :  CLoadBase_t<T, I>{aInitBase}, 
-		    CFormat_t{aInitFormat}, 
-		    CLoadRoot_t{pszInitRoot}
+		Load_t(const Base_t &aInitBase, const KV3ID_t &aInitFormat, const char *pszInitRoot)
+		 :  LoadBase_t<T, I>{aInitBase}, 
+		    Format_t{aInitFormat}, 
+		    LoadRoot_t{pszInitRoot}
 		{
 		}
 
-		CLoad_t(const CLoad_t &aInit)
-		 :  CLoad_t({aInit.m_aContext, aInit.m_psMessage, aInit.m_aData}, aInit.m_aFormat, aInit.m_pszName)
+		Load_t(const Load_t &aInit)
+		 :  Load_t({aInit.m_aContext, aInit.m_psMessage, aInit.m_aData}, aInit.m_aFormat, aInit.m_pszName)
 		{
 		}
-	}; // CLoad_t<T, I>
+	}; // Load_t<T, I>
 
 	class ILoad
 	{
@@ -77,8 +77,8 @@ namespace AnyConfig
 	}; // ILoad
 
 	template<class T>
-	class CLoadBase : public T, 
-	                  public ILoad
+	class CLoadBase : public ILoad, 
+	                  public T
 	{
 	public:
 		using Base_t = T;
@@ -87,172 +87,207 @@ namespace AnyConfig
 		 :  Base_t(aInit)
 		{
 		}
-	};
+	}; // CLoadBase<T>
 
-	using LoadBase_t = CLoadBase<CLoad_t<CKeyValues3Context *, CUtlBuffer *>>;
+	using CLoadBase_t = CLoadBase<Load_t<CKeyValues3Context *, CUtlBuffer *>>;
 
-	class Load_t : public LoadBase_t
+	class CLoad : public CLoadBase_t
 	{
 	public:
-		using Base_t = LoadBase_t;
+		using Base_t = CLoadBase_t;
 
-		Load_t(const Base_t::Base_t &aInit)
+		CLoad(const Base_t::Base_t &aInit)
 		 :  Base_t(aInit)
 		{
 		}
 
 	public: // ILoad
 		bool Load();
-	}; // Load_t
+	}; // CLoad
 
-	using Load2Base_t = CLoadBase<CLoad_t<KeyValues3 *, CUtlBuffer *>>;
-
-	class Load2_t : public Load2Base_t
+	class Load final : public CLoad
 	{
 	public:
-		using Base_t = Load2Base_t;
+		using CBase = CLoad;
+		using CBase::CBase;
+	}; // Load
 
-		Load2_t(const Base_t::Base_t &aInit)
+	using Load2_t = CLoadBase<Load_t<KeyValues3 *, CUtlBuffer *>>;
+
+	class CLoad2 : public Load2_t
+	{
+	public:
+		using Base_t = Load2_t;
+
+		CLoad2(const Base_t::Base_t &aInit)
 		 :  Base_t(aInit)
 		{
 		}
 
 	public: // ILoad
 		bool Load();
-	}; // Load2_t
+	}; // CLoad2
 
-	using Load3Base_t = CLoadBase<CLoad_t<KeyValues3 *, const char *>>;
-
-	class Load3_t : public Load3Base_t
+	class Load2 final : public CLoad2
 	{
 	public:
-		using Base_t = Load3Base_t;
+		using CBase = CLoad2;
+		using CBase::CBase;
+	}; // Load2
 
-		Load3_t(const Base_t::Base_t &aInit)
+	using Load3_t = CLoadBase<Load_t<KeyValues3 *, const char *>>;
+
+	class CLoad3 : public Load3_t
+	{
+	public:
+		using Base_t = Load3_t;
+
+		CLoad3(const Base_t::Base_t &aInit)
 		 :  Base_t(aInit)
 		{
 		}
 
 	public: // ILoad
 		bool Load();
-	}; // Load3_t
+	}; // CLoad3
 
-	using LoadBase_NoContext_t = CNoContextBase<CLoad_t<CEmpty_t, CUtlBuffer *>>;
-
-	class Load_NoContext_t : public LoadBase_NoContext_t
+	class Load3 final : public CLoad3
 	{
 	public:
-		using Base_t = LoadBase_NoContext_t;
+		using CBase = CLoad3;
+		using CBase::CBase;
+	}; // Load3
 
-		Load_NoContext_t(const Base_t::Base_t &aInit)
-		 :  Base_t(aInit)
-		{
-		}
-	}; // Load_NoContext_t
+	using Load_NoContext_t = CNoContextBase<Load_t<Empty_t, CUtlBuffer *>>;
 
-	using Load2Base_NoContext_t = CNoContextBase<CLoad_t<CEmpty_t, CUtlBuffer *>>;
-
-	class Load2_NoContext_t : public Load2Base_NoContext_t
+	class CLoad_NoContext : public Load_NoContext_t
 	{
 	public:
-		using Base_t = Load2Base_NoContext_t;
+		using Base_t = Load_NoContext_t;
 
-		Load2_NoContext_t(const Base_t::Base_t &aInit)
+		CLoad_NoContext(const Base_t::Base_t &aInit)
 		 :  Base_t(aInit)
 		{
 		}
-	}; // Load2_NoContext_t
+	}; // CLoad_NoContext
 
-	using Load3Base_NoContext_t = CNoContextBase<CLoad_t<CEmpty_t, const char *>>;
-
-	class Load3_NoContext_t : public Load3Base_NoContext_t
+	class Load_NoContext final : public CLoad_NoContext
 	{
 	public:
-		using Base_t = Load3Base_NoContext_t;
+		using CBase = CLoad_NoContext;
+		using CBase::CBase;
+	}; // Load_NoContext
 
-		Load3_NoContext_t(const Base_t::Base_t &aInit)
-		 :  Base_t(aInit)
-		{
-		}
-	}; // Load3_NoContext_t
+	using Load2_NoContext_t = CNoContextBase<Load_t<Empty_t, CUtlBuffer *>>;
 
-	using LoadBase_Generic_t = CGenericBase<Load2_NoContext_t>;
-
-	class Load_Generic_t : public LoadBase_Generic_t
+	class CLoad2_NoContext : public Load2_NoContext_t
 	{
 	public:
-		using Base_t = LoadBase_Generic_t;
-		using GenericBase_t = Base_t::Base_t;
-		using NoContextBase_t = GenericBase_t::Base_t::Base_t;
+		using Base_t = Load2_NoContext_t;
 
-		Load_Generic_t(const GenericBase_t &aInit)
+		CLoad2_NoContext(const Base_t::Base_t &aInit)
+		 :  Base_t(aInit)
+		{
+		}
+	}; // CLoad2_NoContext
+
+	class Load2_NoContext : public CLoad2_NoContext
+	{
+	public:
+		using CBase = CLoad2_NoContext;
+		using CBase::CBase;
+	}; // Load2_NoContext
+
+	using Load3_NoContext_t = CNoContextBase<Load_t<Empty_t, const char *>>;
+
+	class CLoad3_NoContext : public Load3_NoContext_t
+	{
+	public:
+		using Base_t = Load3_NoContext_t;
+
+		CLoad3_NoContext(const Base_t::Base_t &aInit)
+		 :  Base_t(aInit)
+		{
+		}
+	}; // CLoad3_NoContext
+
+	class Load3_NoContext : public CLoad3_NoContext
+	{
+	public:
+		using CBase = CLoad3_NoContext;
+		using CBase::CBase;
+	}; // Load3_NoContext
+
+	using Load_General_t = CGeneralBase<CLoad2_NoContext>;
+
+	class CLoad_General : public Load_General_t
+	{
+	public:
+		using Base_t = Load_General_t;
+		using GeneralBase_t = Base_t::Base_t;
+		using NoContextBase_t = GeneralBase_t::Base_t::Base_t;
+
+		CLoad_General(const GeneralBase_t &aInit)
 		 :  Base_t(aInit)
 		{
 		}
 
-		Load_Generic_t(const NoContextBase_t &aInit)
+		CLoad_General(const NoContextBase_t &aInit)
 		 :  Base_t(aInit)
 		{
 		}
-	}; // Load_Generic_t
+	}; // CLoad_General
+
+	class Load_General final : public CLoad_General
+	{
+	public:
+		using CBase = CLoad_General;
+		using CBase::CBase;
+	}; // Load_General
 
 	template<class T>
-	struct CLoadFromFileBase_t : public CLoadTo_t<T>, 
-	                             public CError_t, 
-	                             public CFileSystemPath_t
+	struct LoadFromFileBase_t : public LoadTo_t<T>, 
+	                            public Error_t, 
+	                            public FileSystemPath_t
 	{
-	public:
-		using Base_t = LoadBase_Generic_t;
+		using Base_t = Load_General_t;
 
-	public:
-		CLoadFromFileBase_t(const T &aInitContext, CUtlString *psInitMessage, const char *pszFilename, const char *pszPathID)
-		 :  CLoadTo_t<T>{aInitContext}, 
-		    CError_t{psInitMessage}, 
-		    CFileSystemPath_t{pszFilename, pszPathID}
+		LoadFromFileBase_t(const T &aInitContext, CUtlString *psInitMessage, const char *pszFilename, const char *pszPathID)
+		 :  LoadTo_t<T>{aInitContext}, 
+		    Error_t{psInitMessage}, 
+		    FileSystemPath_t{pszFilename, pszPathID}
 		{
 		}
 
-		CLoadFromFileBase_t(CUtlString *psInitMessage, const char *pszFilename, const char *pszPathID)
-		 :  CLoadFromFileBase_t({}, psInitMessage, pszFilename, pszPathID)
+		LoadFromFileBase_t(CUtlString *psInitMessage, const char *pszFilename, const char *pszPathID)
+		 :  LoadFromFileBase_t({}, psInitMessage, pszFilename, pszPathID)
 		{
 		}
 
-		CLoadFromFileBase_t(const CLoadFromFileBase_t &aInit)
-		 :  CLoadFromFileBase_t{aInit.m_aContext, aInit.m_psMessage, aInit.m_pszFilename, aInit.m_pszPathID}
+		LoadFromFileBase_t(const LoadFromFileBase_t &aInit)
+		 :  LoadFromFileBase_t{aInit.m_aContext, aInit.m_psMessage, aInit.m_pszFilename, aInit.m_pszPathID}
 		{
 		}
-	}; // CLoadFromFileBase_t<T>
+	}; // LoadFromFileBase_t<T>
 
 	template<class T>
-	struct CLoadFromFile_t : public CLoadFromFileBase_t<T>, 
-	                         public CFormat_t
+	struct CLoadFromFile_t : public LoadFromFileBase_t<T>, 
+	                         public Format_t
 	{
 	public:
-		using Base_t = CLoadFromFileBase_t<T>;
+		using Base_t = LoadFromFileBase_t<T>;
 
 		CLoadFromFile_t(const Base_t &aInitBase, const KV3ID_t &aFormat)
 		 :  Base_t{aInitBase}, 
-		    CFormat_t{aFormat}
+		    Format_t{aFormat}
 		{
 		}
 
 		CLoadFromFile_t(const CLoadFromFile_t &aInit)
-		 :  CLoadFromFile_t{{aInit.m_aContext, aInit.m_psMessage, aInit.m_pszFilename, aInit.m_pszPathID}, aInit.m_aFormat}
+		 :  CLoadFromFile_t({aInit.m_aContext, aInit.m_psMessage, aInit.m_pszFilename, aInit.m_pszPathID}, aInit.m_aFormat)
 		{
 		}
 	}; // CLoadFromFile_t<T>
-
-	template<class T>
-	class LoadFromFileBase_t : public CLoadFromFile_t<T>
-	{
-	public:
-		using Base_t = CLoadFromFile_t<T>;
-
-		LoadFromFileBase_t(const Base_t &aInit)
-		 :  Base_t(aInit)
-		{
-		}
-	}; // LoadFromFileBase_t
 
 	class ILoadFromFile
 	{
@@ -261,8 +296,8 @@ namespace AnyConfig
 	}; // ILoadFromFile
 
 	template<class T>
-	class CLoadFromFileBase : public T, 
-	                          public ILoadFromFile
+	class CLoadFromFileBase : public ILoadFromFile, 
+	                          public T
 	{
 	public:
 		using Base_t = T;
@@ -273,103 +308,124 @@ namespace AnyConfig
 		}
 	}; // CLoadFromFileBase<T>
 
-	class LoadFromFile_t : public CLoadFromFileBase<LoadFromFileBase_t<CKeyValues3Context *>>
+	class CLoadFromFile : public CLoadFromFileBase<CLoadFromFile_t<CKeyValues3Context *>>
 	{
 	public:
-		using Base_t = CLoadFromFileBase<LoadFromFileBase_t<CKeyValues3Context *>>;
+		using Base_t = CLoadFromFileBase<CLoadFromFile_t<CKeyValues3Context *>>;
 
-		LoadFromFile_t(const Base_t::Base_t &aInit)
+		CLoadFromFile(const Base_t::Base_t &aInit)
 		 :  Base_t(aInit)
 		{
 		}
 
 	public: // ILoadFromFile
 		bool LoadFromFile() override;
-	}; // LoadFromFile_t
+	}; // CLoadFromFile
 
-	using LoadFromFile2Base_t = CLoadFromFileBase<LoadFromFileBase_t<KeyValues3 *>>;
-
-	class LoadFromFile2_t : public LoadFromFile2Base_t
+	class LoadFromFile final : public CLoadFromFile
 	{
 	public:
-		using Base_t = LoadFromFile2Base_t;
+		using CBase = CLoadFromFile;
+		using CBase::CBase;
+	}; // LoadFromFile
 
-		LoadFromFile2_t(const Base_t::Base_t &aInit)
+	using LoadFromFile2_t = CLoadFromFileBase<CLoadFromFile_t<KeyValues3 *>>;
+
+	class CLoadFromFile2 : public LoadFromFile2_t
+	{
+	public:
+		using Base_t = LoadFromFile2_t;
+
+		CLoadFromFile2(const Base_t::Base_t &aInit)
 		 :  Base_t(aInit)
 		{
 		}
 
 	public: // ILoadFromFile
 		bool LoadFromFile() override;
-	}; // LoadFromFile2_t
+	}; // CLoadFromFile2
 
-	using LoadFromFileBase_NoContext_t = CLoadFromFileBase<CLoadFromFile_t<KeyValues3 *>>;
-
-	class LoadFromFile_NoContext_t : public LoadFromFileBase_NoContext_t
+	class LoadFromFile2 final : public CLoadFromFile2
 	{
 	public:
-		using Base_t = LoadFromFileBase_NoContext_t;
+		using CBase = CLoadFromFile2;
+		using CBase::CBase;
+	}; // LoadFromFile2
 
-		LoadFromFile_NoContext_t(const Base_t::Base_t &aInit)
-		 :  Base_t(aInit)
-		{
-		}
-	}; // LoadFromFile_NoContext_t
+	using LoadFromFile_NoContext_t = CLoadFromFileBase<CLoadFromFile_t<KeyValues3 *>>;
 
-	using LoadFromFile2Base_NoContext_t = CNoContextBase<CLoadFromFile_t<CEmpty_t>>;
-
-	class LoadFromFile2_NoContext_t : public LoadFromFile2Base_NoContext_t
+	class CLoadFromFile_NoContext : public LoadFromFile_NoContext_t
 	{
 	public:
-		using Base_t = LoadFromFile2Base_NoContext_t;
+		using Base_t = LoadFromFile_NoContext_t;
 
-		LoadFromFile2_NoContext_t(const Base_t::Base_t &aInit)
+		CLoadFromFile_NoContext(const Base_t::Base_t &aInit)
 		 :  Base_t(aInit)
 		{
 		}
-	}; // LoadFromFile2_NoContext_t
+	}; // CLoadFromFile_NoContext
 
-	using LoadFromFileBase_Generic_t = CGenericBase<LoadFromFile2_NoContext_t>;
+	using LoadFromFile2_NoContext_t = CNoContextBase<CLoadFromFile_t<Empty_t>>;
 
-	class LoadFromFile_Generic_t : public LoadFromFileBase_Generic_t
+	class CLoadFromFile2_NoContext : public LoadFromFile2_NoContext_t
 	{
 	public:
-		using Base_t = LoadFromFileBase_Generic_t;
-		using GenericBase_t = Base_t::Base_t;
-		using NoContextBase_t = GenericBase_t::Base_t::Base_t;
+		using Base_t = LoadFromFile2_NoContext_t;
 
-		LoadFromFile_Generic_t(const GenericBase_t &aInit)
+		CLoadFromFile2_NoContext(const Base_t::Base_t &aInit)
+		 :  Base_t(aInit)
+		{
+		}
+	}; // CLoadFromFile2_NoContext
+
+	using LoadFromFile_General_t = CGeneralBase<CLoadFromFile2_NoContext>;
+
+	class CLoadFromFile_General : public LoadFromFile_General_t
+	{
+	public:
+		using Base_t = LoadFromFile_General_t;
+		using GeneralBase_t = Base_t::Base_t;
+		using NoContextBase_t = GeneralBase_t::Base_t::Base_t;
+
+		CLoadFromFile_General(const GeneralBase_t &aInit)
 		 :  Base_t(aInit)
 		{
 		}
 
-		LoadFromFile_Generic_t(const NoContextBase_t &aInit)
+		CLoadFromFile_General(const NoContextBase_t &aInit)
 		 :  Base_t(aInit)
 		{
 		}
-	}; // LoadFromFile_Generic_t
+	}; // CLoadFromFile_General
+
+	class LoadFromFile_General final : CLoadFromFile_General
+	{
+	public:
+		using CBase = CLoadFromFile_General;
+		using CBase::CBase;
+	}; // LoadFromFile_General
 
 	template<class T, class I>
-	struct CLoadNoHeader_t : public CLoadTo_t<T>, 
-	                         public CError_t, 
-	                         public CInput_t<I>, 
-	                         public CFormat_t, 
-	                         public CLoadRoot_t
+	struct LoadNoHeader_t : public LoadTo_t<T>, 
+	                        public Error_t, 
+	                        public Input_t<I>, 
+	                        public Format_t, 
+	                        public LoadRoot_t
 	{
-		CLoadNoHeader_t(const T &aInitContext, CUtlString *psInitMessage, I aInitData, const KV3ID_t &aInitFormat, const char *pszInitRoot)
-		 :  CLoadTo_t<T>{aInitContext}, 
-		    CError_t{psInitMessage}, 
-		    CInput_t<I>{aInitData}, 
-		    CFormat_t{aInitFormat}, 
-		    CLoadRoot_t{pszInitRoot}
+		LoadNoHeader_t(const T &aInitContext, CUtlString *psInitMessage, I aInitData, const KV3ID_t &aInitFormat, const char *pszInitRoot)
+		 :  LoadTo_t<T>{aInitContext}, 
+		    Error_t{psInitMessage}, 
+		    Input_t<I>{aInitData}, 
+		    Format_t{aInitFormat}, 
+		    LoadRoot_t{pszInitRoot}
 		{
 		}
 
-		CLoadNoHeader_t(CUtlString *psInitMessage, I aInitData, const KV3ID_t &aInitFormat, const char *pszInitRoot)
-		 :  CLoadNoHeader_t({}, psInitMessage, aInitData, aInitFormat, pszInitRoot)
+		LoadNoHeader_t(CUtlString *psInitMessage, I aInitData, const KV3ID_t &aInitFormat, const char *pszInitRoot)
+		 :  LoadNoHeader_t({}, psInitMessage, aInitData, aInitFormat, pszInitRoot)
 		{
 		}
-	}; // CLoadNoHeader_t<T, I>
+	}; // LoadNoHeader_t<T, I>
 
 	class ILoadNoHeader
 	{
@@ -378,8 +434,8 @@ namespace AnyConfig
 	}; // ILoadNoHeader
 
 	template<class T>
-	class CLoadNoHeaderBase : public T, 
-	                          public ILoadNoHeader
+	class CLoadNoHeaderBase : public ILoadNoHeader, 
+	                          public T
 	{
 	public:
 		using Base_t = T;
@@ -390,68 +446,75 @@ namespace AnyConfig
 		}
 	}; // CLoadNoHeaderBase<T>
 
-	using LoadNoHeaderBase_t = CLoadNoHeaderBase<CLoadNoHeader_t<KeyValues3 *, const char *>>;
+	using LoadNoHeaderBase_t = CLoadNoHeaderBase<LoadNoHeader_t<KeyValues3 *, const char *>>;
 
-	class LoadNoHeader_t : public LoadNoHeaderBase_t
+	class CLoadNoHeader : public LoadNoHeaderBase_t
 	{
 	public:
 		using Base_t = LoadNoHeaderBase_t;
 
-		LoadNoHeader_t(const Base_t::Base_t &aInit)
+		CLoadNoHeader(const Base_t::Base_t &aInit)
 		 :  Base_t(aInit)
 		{
 		}
 
 	public: // ILoadNoHeader
 		bool LoadNoHeader() override;
-	}; // LoadNoHeader_t
+	}; // CLoadNoHeader
 
-	using LoadNoHeaderBase_NoContext_t = CNoContextBase<LoadNoHeader_t>;
+	using LoadNoHeader_NoContext_t = CNoContextBase<CLoadNoHeader>;
 
-	class LoadNoHeader_NoContext_t : public LoadNoHeaderBase_NoContext_t
+	class CLoadNoHeader_NoContext : public LoadNoHeader_NoContext_t
 	{
 	public:
-		using Base_t = LoadNoHeaderBase_NoContext_t;
+		using Base_t = LoadNoHeader_NoContext_t;
 
-		LoadNoHeader_NoContext_t(const Base_t::Base_t &aInit)
+		CLoadNoHeader_NoContext(const Base_t::Base_t &aInit)
 		 :  Base_t(aInit)
 		{
 		}
-	}; // LoadNoHeader_NoContext_t
+	}; // CLoadNoHeader_NoContext
+
+	class LoadNoHeader_NoContext final : public CLoadNoHeader_NoContext
+	{
+	public:
+		using CBase = CLoadNoHeader_NoContext;
+		using CBase::CBase;
+	}; // LoadNoHeader_NoContext
 
 	template<class T>
 	class CReaderBase : virtual public T, 
-	                    public IBaseReader<Load_Generic_t>, 
-	                    public IBaseReader<LoadFromFile_Generic_t>
+	                    public IBaseReader<CLoad_General>, 
+	                    public IBaseReader<CLoadFromFile_General>
 	{
 	public:
 		virtual ~CReaderBase() = default;
 	}; // CReaderBase<T>
 
-	class CBaseReader : public CReaderBase<CBase>
+	class CBaseReader : public CReaderBase<CConfig>
 	{
 	public:
 		CBaseReader();
 		CBaseReader(KeyValues3 *pRoot);
 
-	public: // IBaseReader<Load_Generic_t>
-		bool Load(const Load_Generic_t &aParams);
+	public: // IBaseReader<CLoad_General>
+		bool Load(const CLoad_General &aParams);
 
-	public: // IBaseReader<LoadFromFile_Generic_t>
-		bool Load(const LoadFromFile_Generic_t &aParams);
+	public: // IBaseReader<CLoadFromFile_General>
+		bool Load(const CLoadFromFile_General &aParams);
 
 	public:
 		//
 		// Load ones (members).
 		//
-		bool Load(const Load_NoContext_t &aParams);
-		bool Load(const Load2_NoContext_t &aParams);
-		bool Load(const Load3_NoContext_t &aParams);
+		bool Load(const CLoad_NoContext &aParams);
+		bool Load(const CLoad2_NoContext &aParams);
+		bool Load(const CLoad3_NoContext &aParams);
 
-		bool LoadFromFile(const LoadFromFile_NoContext_t &aParams);
-		bool LoadFromFile(const LoadFromFile2_NoContext_t &aParams);
+		bool LoadFromFile(const CLoadFromFile_NoContext &aParams);
+		bool LoadFromFile(const CLoadFromFile2_NoContext &aParams);
 
-		bool LoadNoHeader(const LoadNoHeader_NoContext_t &aParams);
+		bool LoadNoHeader(const CLoadNoHeader_NoContext &aParams);
 	}; // CBaseReader
 }; // AnyConfig
 

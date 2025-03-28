@@ -31,7 +31,7 @@
 
 namespace AnyConfig
 {
-	class KeyValues : virtual public CKeyValuesReader, virtual public CKeyValuesWriter
+	class CKeyValues : virtual public CKeyValuesReader, virtual public CKeyValuesWriter
 	{
 	public:
 		static constexpr const char sm_szFileExtensionGameEvents[] = ".gameevents";
@@ -40,6 +40,12 @@ namespace AnyConfig
 		static constexpr const char sm_szFileExtensionVDF[] = ".vdf";
 
 		FileExtension::CCheck<sm_szFileExtensionGameEvents, sm_szFileExtensionKV, sm_szFileExtensionTXT, sm_szFileExtensionVDF> m_aCheckFileExtension;
+	}; // CKeyValues
+
+	class KeyValues final : public CKeyValues
+	{
+	public:
+		using CKeyValues::CKeyValues;
 	}; // KeyValues
 }; // AnyConfig
 

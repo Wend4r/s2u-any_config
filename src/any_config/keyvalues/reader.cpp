@@ -25,7 +25,7 @@
 #include <tier0/utlbuffer.h>
 #include <tier0/strtools.h>
 
-bool AnyConfig::LoadFromKV1File_t::LoadFromKV1File()
+bool AnyConfig::CLoadFromKV1File::LoadFromKV1File()
 {
 	return LoadKV3FromKV1File(m_aContext, 
 	                          m_psMessage, 
@@ -34,12 +34,12 @@ bool AnyConfig::LoadFromKV1File_t::LoadFromKV1File()
 	                          m_eBehavior);
 }
 
-AnyConfig::LoadFromKV1File_NoContext_t::LoadFromKV1File_NoContext_t(const LoadFromFile_Generic_t::Base_t &aInit)
+AnyConfig::CLoadFromKV1File_NoContext::CLoadFromKV1File_NoContext(const CLoadFromFile_General::Base_t &aInit)
  :  Base_t({aInit.m_psMessage, aInit.m_pszFilename, aInit.m_pszPathID, KV1TEXT_ESC_BEHAVIOR_UNK1})
 {
 }
 
-bool AnyConfig::LoadFromKV1Text_t::LoadFromKV1Text()
+bool AnyConfig::CLoadFromKV1Text::LoadFromKV1Text()
 {
 	return LoadKV3FromKV1Text(m_aContext, 
 	                          m_psMessage, 
@@ -49,34 +49,34 @@ bool AnyConfig::LoadFromKV1Text_t::LoadFromKV1Text()
 	                          m_aValue);
 }
 
-bool AnyConfig::LoadFromKV1Text_Translated_t::LoadFromKV1Text_Translated()
+bool AnyConfig::CLoadFromKV1Text_Translated::LoadFromKV1Text_Translated()
 {
 	return LoadKV3FromKV1Text_Translated(m_aContext, 
 	                                     m_psMessage, 
-	                                     CInput_t<const char *>::m_aData, 
+	                                     Input_t<const char *>::m_aData, 
 	                                     m_eBehavior,
-	                                     CKV1Proccessor_t<KV1ToKV3Translation_t *>::m_aData, 
-	                                     CKV1Unk_t<int>::m_aValue, 
+	                                     KV1Proccessor_t<KV1ToKV3Translation_t *>::m_aData, 
+	                                     KV1Unk_t<int>::m_aValue, 
 	                                     m_pszName, 
-	                                     CKV1Unk_t<bool>::m_aValue);
+	                                     KV1Unk_t<bool>::m_aValue);
 }
 
-AnyConfig::LoadFromKV1Text_NoContext_t::LoadFromKV1Text_NoContext_t(const Load_Generic_t::Base_t &aInit)
- :  LoadFromKV1Text_NoContext_t({aInit.m_psMessage, (const char *)aInit.m_aData->Base(), KV1TEXT_ESC_BEHAVIOR_UNK1, aInit.m_pszName, false})
+AnyConfig::CLoadFromKV1Text_NoContext::CLoadFromKV1Text_NoContext(const CLoad_General::Base_t &aInit)
+ :  CLoadFromKV1Text_NoContext({aInit.m_psMessage, (const char *)aInit.m_aData->Base(), KV1TEXT_ESC_BEHAVIOR_UNK1, aInit.m_pszName, false})
 {
 }
 
-bool AnyConfig::CKeyValuesReader::Load(const Load_Generic_t &aParams)
+bool AnyConfig::CKeyValuesReader::Load(const CLoad_General &aParams)
 {
-	return LoadFromKV1Text(aParams.To<LoadFromKV1Text_NoContext_t>());
+	return LoadFromKV1Text(aParams.To<CLoadFromKV1Text_NoContext>());
 }
 
-bool AnyConfig::CKeyValuesReader::Load(const LoadFromFile_Generic_t &aParams)
+bool AnyConfig::CKeyValuesReader::Load(const CLoadFromFile_General &aParams)
 {
-	return LoadFromKV1File(aParams.To<LoadFromKV1File_NoContext_t>());
+	return LoadFromKV1File(aParams.To<CLoadFromKV1File_NoContext>());
 }
 
-bool AnyConfig::CKeyValuesReader::LoadFromKV1File(const LoadFromKV1File_NoContext_t &aParams)
+bool AnyConfig::CKeyValuesReader::LoadFromKV1File(const CLoadFromKV1File_NoContext &aParams)
 {
 	return LoadKV3FromKV1File(Get(), 
 	                          aParams.m_psMessage, 
@@ -85,7 +85,7 @@ bool AnyConfig::CKeyValuesReader::LoadFromKV1File(const LoadFromKV1File_NoContex
 	                          aParams.m_eBehavior);
 }
 
-bool AnyConfig::CKeyValuesReader::LoadFromKV1Text(const LoadFromKV1Text_NoContext_t &aParams)
+bool AnyConfig::CKeyValuesReader::LoadFromKV1Text(const CLoadFromKV1Text_NoContext &aParams)
 {
 	return LoadKV3FromKV1Text(Get(), 
 	                          aParams.m_psMessage, 
@@ -95,14 +95,14 @@ bool AnyConfig::CKeyValuesReader::LoadFromKV1Text(const LoadFromKV1Text_NoContex
 	                          aParams.m_aValue);
 }
 
-bool AnyConfig::CKeyValuesReader::LoadFromKV1Text_Translated(const LoadFromKV1Text_Translated_NoContext_t &aParams)
+bool AnyConfig::CKeyValuesReader::LoadFromKV1Text_Translated(const CLoadFromKV1Text_Translated_NoContext &aParams)
 {
 	return LoadKV3FromKV1Text_Translated(Get(), 
 	                                     aParams.m_psMessage, 
-	                                     aParams.CInput_t<const char *>::m_aData, 
+	                                     aParams.Input_t<const char *>::m_aData, 
 	                                     aParams.m_eBehavior, 
-	                                     aParams.CKV1Proccessor_t<KV1ToKV3Translation_t *>::m_aData, 
-	                                     aParams.CKV1Unk_t<int>::m_aValue, 
+	                                     aParams.KV1Proccessor_t<KV1ToKV3Translation_t *>::m_aData, 
+	                                     aParams.KV1Unk_t<int>::m_aValue, 
 	                                     aParams.m_pszName, 
-	                                     aParams.CKV1Unk_t<bool>::m_aValue);
+	                                     aParams.KV1Unk_t<bool>::m_aValue);
 }

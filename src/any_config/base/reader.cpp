@@ -23,7 +23,7 @@
 
 #include <tier0/keyvalues3.h>
 
-bool AnyConfig::Load_t::Load()
+bool AnyConfig::CLoad::Load()
 {
 	return LoadKV3(m_aContext, 
 	               m_psMessage, 
@@ -32,7 +32,7 @@ bool AnyConfig::Load_t::Load()
 	               m_pszName);
 }
 
-bool AnyConfig::Load2_t::Load()
+bool AnyConfig::CLoad2::Load()
 {
 	return LoadKV3(m_aContext, 
 	               m_psMessage, 
@@ -41,7 +41,7 @@ bool AnyConfig::Load2_t::Load()
 	               m_pszName);
 }
 
-bool AnyConfig::Load3_t::Load()
+bool AnyConfig::CLoad3::Load()
 {
 	return LoadKV3(m_aContext, 
 	               m_psMessage, 
@@ -50,7 +50,7 @@ bool AnyConfig::Load3_t::Load()
 	               m_pszName);
 }
 
-bool AnyConfig::LoadFromFile_t::LoadFromFile()
+bool AnyConfig::CLoadFromFile::LoadFromFile()
 {
 	return LoadKV3FromFile(m_aContext, 
 	                       m_psMessage, 
@@ -59,7 +59,7 @@ bool AnyConfig::LoadFromFile_t::LoadFromFile()
 	                       m_aFormat);
 }
 
-bool AnyConfig::LoadFromFile2_t::LoadFromFile()
+bool AnyConfig::CLoadFromFile2::LoadFromFile()
 {
 	return LoadKV3FromFile(m_aContext, 
 	                       m_psMessage, 
@@ -68,7 +68,7 @@ bool AnyConfig::LoadFromFile2_t::LoadFromFile()
 	                       m_aFormat);
 }
 
-bool AnyConfig::LoadNoHeader_t::LoadNoHeader()
+bool AnyConfig::CLoadNoHeader::LoadNoHeader()
 {
 	return LoadKV3Text_NoHeader(m_aContext, 
 	                            m_psMessage, 
@@ -78,26 +78,26 @@ bool AnyConfig::LoadNoHeader_t::LoadNoHeader()
 }
 
 AnyConfig::CBaseReader::CBaseReader()
- :  CBase()
+ :  CConfig()
 {
 }
 
 AnyConfig::CBaseReader::CBaseReader(KeyValues3 *pRoot)
- :  CBase(pRoot)
+ :  CConfig(pRoot)
 {
 }
 
-bool AnyConfig::CBaseReader::Load(const Load_Generic_t &aParams)
+bool AnyConfig::CBaseReader::Load(const CLoad_General &aParams)
 {
 	return Load(aParams.ToBase());
 }
 
-bool AnyConfig::CBaseReader::Load(const LoadFromFile_Generic_t &aParams)
+bool AnyConfig::CBaseReader::Load(const CLoadFromFile_General &aParams)
 {
 	return LoadFromFile(aParams.ToBase());
 }
 
-bool AnyConfig::CBaseReader::Load(const Load_NoContext_t &aParams)
+bool AnyConfig::CBaseReader::Load(const CLoad_NoContext &aParams)
 {
 	return LoadKV3(Get(), 
 	               aParams.m_psMessage, 
@@ -106,7 +106,7 @@ bool AnyConfig::CBaseReader::Load(const Load_NoContext_t &aParams)
 	               aParams.m_pszName);
 }
 
-bool AnyConfig::CBaseReader::Load(const Load2_NoContext_t &aParams)
+bool AnyConfig::CBaseReader::Load(const CLoad2_NoContext &aParams)
 {
 	return LoadKV3(Get(), 
 	               aParams.m_psMessage, 
@@ -115,7 +115,7 @@ bool AnyConfig::CBaseReader::Load(const Load2_NoContext_t &aParams)
 	               aParams.m_pszName);
 }
 
-bool AnyConfig::CBaseReader::Load(const Load3_NoContext_t &aParams)
+bool AnyConfig::CBaseReader::Load(const CLoad3_NoContext &aParams)
 {
 	return LoadKV3(Get(), 
 	               aParams.m_psMessage, 
@@ -124,7 +124,7 @@ bool AnyConfig::CBaseReader::Load(const Load3_NoContext_t &aParams)
 	               aParams.m_pszName);
 }
 
-bool AnyConfig::CBaseReader::LoadFromFile(const LoadFromFile_NoContext_t &aParams)
+bool AnyConfig::CBaseReader::LoadFromFile(const CLoadFromFile_NoContext &aParams)
 {
 	return LoadKV3FromFile(Get(), 
 	                       aParams.m_psMessage, 
@@ -133,7 +133,7 @@ bool AnyConfig::CBaseReader::LoadFromFile(const LoadFromFile_NoContext_t &aParam
 	                       aParams.m_aFormat);
 }
 
-bool AnyConfig::CBaseReader::LoadFromFile(const LoadFromFile2_NoContext_t &aParams)
+bool AnyConfig::CBaseReader::LoadFromFile(const CLoadFromFile2_NoContext &aParams)
 {
 	return LoadKV3FromFile(Get(), 
 	                       aParams.m_psMessage, 
@@ -142,7 +142,7 @@ bool AnyConfig::CBaseReader::LoadFromFile(const LoadFromFile2_NoContext_t &aPara
 	                       aParams.m_aFormat);
 }
 
-bool AnyConfig::CBaseReader::LoadNoHeader(const LoadNoHeader_NoContext_t &aParams)
+bool AnyConfig::CBaseReader::LoadNoHeader(const CLoadNoHeader_NoContext &aParams)
 {
 	return LoadKV3Text_NoHeader(Get(), 
 	                            aParams.m_psMessage, 

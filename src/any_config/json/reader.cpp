@@ -26,7 +26,7 @@
 #include <tier0/utlbuffer.h>
 #include <tier0/utlstring.h>
 
-bool AnyConfig::LoadFromJSON_t::LoadFromJSON()
+bool AnyConfig::CLoadFromJSON::LoadFromJSON()
 {
 	return LoadKV3FromJSON(m_aContext, 
 	                       m_psMessage, 
@@ -34,27 +34,27 @@ bool AnyConfig::LoadFromJSON_t::LoadFromJSON()
 	                       m_pszName);
 }
 
-AnyConfig::LoadFromJSON_NoContext_t::LoadFromJSON_NoContext_t(const Load_Generic_t &aInit)
+AnyConfig::CLoadFromJSON_NoContext::CLoadFromJSON_NoContext(const CLoad_General &aInit)
  :  LoadFromJSON_NoContext_t({aInit.m_psMessage, (const char *)aInit.m_aData->Base(), aInit.m_pszName})
 {
 }
 
-AnyConfig::LoadFromJSONFile_NoContext_t::LoadFromJSONFile_NoContext_t(const LoadFromFile_Generic_t::Base_t &aInit)
+AnyConfig::CLoadFromJSONFile_NoContext::CLoadFromJSONFile_NoContext(const CLoadFromFile_General::Base_t &aInit)
  :  Base_t({aInit.m_psMessage, aInit.m_pszFilename, aInit.m_pszPathID})
 {
 }
 
-bool AnyConfig::CJSONReader::Load(const Load_Generic_t &aParams)
+bool AnyConfig::CJSONReader::Load(const CLoad_General &aParams)
 {
-	return LoadFromJSON(aParams.To<LoadFromJSON_NoContext_t>());
+	return LoadFromJSON(aParams.To<CLoadFromJSON_NoContext>());
 }
 
-bool AnyConfig::CJSONReader::Load(const LoadFromFile_Generic_t &aParams)
+bool AnyConfig::CJSONReader::Load(const CLoadFromFile_General &aParams)
 {
-	return LoadFromJSONFile(aParams.To<LoadFromJSONFile_NoContext_t>());
+	return LoadFromJSONFile(aParams.To<CLoadFromJSONFile_NoContext>());
 }
 
-bool AnyConfig::CJSONReader::LoadFromJSON(const LoadFromJSON_NoContext_t &aParams)
+bool AnyConfig::CJSONReader::LoadFromJSON(const CLoadFromJSON_NoContext &aParams)
 {
 	return LoadKV3FromJSON(Get(), 
 	                       aParams.m_psMessage, 
@@ -62,7 +62,7 @@ bool AnyConfig::CJSONReader::LoadFromJSON(const LoadFromJSON_NoContext_t &aParam
 	                       aParams.m_pszName);
 }
 
-bool AnyConfig::CJSONReader::LoadFromJSONFile(const LoadFromJSONFile_NoContext_t &aParams)
+bool AnyConfig::CJSONReader::LoadFromJSONFile(const CLoadFromJSONFile_NoContext &aParams)
 {
 	return LoadKV3FromJSONFile(Get(), 
 	                           aParams.m_psMessage, 

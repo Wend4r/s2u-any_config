@@ -19,8 +19,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef _INCLUDE_ANY_CONFIG_BASE_BASE_HPP_
-#define _INCLUDE_ANY_CONFIG_BASE_BASE_HPP_
+#ifndef _INCLUDE_ANY_CONFIG_BASE_CONFIG_HPP_
+#define _INCLUDE_ANY_CONFIG_BASE_CONFIG_HPP_
 
 #pragma once
 
@@ -28,7 +28,7 @@ class KeyValues3;
 
 namespace AnyConfig
 {
-	class CBase
+	class CConfig
 	{
 	private:
 		KeyValues3 *m_pRoot;
@@ -38,16 +38,16 @@ namespace AnyConfig
 		const KeyValues3 *Get() const;
 
 	public:
-		explicit CBase();
-		CBase(KeyValues3 *pData);
-		~CBase();
+		explicit CConfig();
+		CConfig(KeyValues3 *pData);
+		~CConfig();
 
 	public:
 		//
 		// Debug
 		//
 		void DebugPrint();
-	}; // CBase
+	}; // CConfig
 }; // AnyConfig
 
-#endif // _INCLUDE_ANY_CONFIG_BASE_BASE_HPP_
+#endif // _INCLUDE_ANY_CONFIG_BASE_CONFIG_HPP_

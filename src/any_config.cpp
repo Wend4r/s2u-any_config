@@ -25,93 +25,84 @@
 #include <tier0/commonmacros.h>
 #include <tier0/utlstring.h>
 
-AnyConfig::Anyone::Anyone()
- :  CBase()
+AnyConfig::CAnyone::CAnyone()
+ :  CConfig()
 {
 }
 
-AnyConfig::Anyone::Anyone(KeyValues3 *pRoot)
- :  CBase(pRoot)
+AnyConfig::CAnyone::CAnyone(KeyValues3 *pRoot)
+ :  CConfig(pRoot)
 {
 }
 
-bool AnyConfig::Anyone::Load(const Load_Generic_t &aParams)
+bool AnyConfig::CAnyone::Load(const CLoad_General &aParams)
 {
 	AssertMsg(false, "Use an explicit conversion");
 
 	static const char *s_pszMessageConcat[] = {"<", "Load", " Anyone", ": ", "Use an explicit conversion", ">"};
 
-	CBufferStringN<256> sMessage;
-
-	sMessage.AppendConcat(ARRAYSIZE(s_pszMessageConcat), s_pszMessageConcat, NULL);
-	*aParams.m_psMessage = sMessage;
+	*aParams.m_psMessage = CBufferStringN<256>(s_pszMessageConcat);
 
 	return false;
 }
 
-bool AnyConfig::Anyone::Load(const LoadFromFile_Generic_t &aParams)
+bool AnyConfig::CAnyone::Load(const CLoadFromFile_General &aParams)
 {
 	const char *pszFilename = aParams.m_pszFilename;
 
-	if(Base::m_aCheckFileExtension.Check(pszFilename))
+	if(CBase::m_aCheckFileExtension.Check(pszFilename))
 	{
-		return Base::Load(aParams);
+		return CBase::Load(aParams);
 	}
-	else if(JSON::m_aCheckFileExtension.Check(pszFilename))
+	else if(CJSON::m_aCheckFileExtension.Check(pszFilename))
 	{
-		return JSON::Load(aParams);
+		return CJSON::Load(aParams);
 	}
-	else if(KeyValues::m_aCheckFileExtension.Check(pszFilename))
+	else if(CKeyValues::m_aCheckFileExtension.Check(pszFilename))
 	{
-		return KeyValues::Load(aParams);
+		return CKeyValues::Load(aParams);
 	}
 
 	const char *pszMessageConcat[] = {"<", "Load", " Anyone", " from file", ": ", "Unknown file extension", " of ", "\"", pszFilename, "\"", ">"};
 
-	CBufferStringN<256 + MAX_PATH> sMessage;
-
-	sMessage.AppendConcat(ARRAYSIZE(pszMessageConcat), pszMessageConcat, NULL);
-	*aParams.m_psMessage = sMessage;
+	*aParams.m_psMessage = CBufferStringN<256 + MAX_PATH>(pszMessageConcat);
 
 	return false;
 }
 
-bool AnyConfig::Anyone::Save(const Save_Generic_t &aParams)
+bool AnyConfig::CAnyone::Save(const CSave_General &aParams)
 {
 	AssertMsg(false, "Use an explicit conversion");
 
 	static const char *s_pszMessageConcat[] = {"<", "Save", " Anyone", ": ", "Use an explicit conversion", ">"};
 
-	CBufferStringN<256> sMessage;
-
-	sMessage.AppendConcat(ARRAYSIZE(s_pszMessageConcat), s_pszMessageConcat, NULL);
-	*aParams.m_psMessage = sMessage;
+	*aParams.m_psMessage = CBufferStringN<256>(s_pszMessageConcat);
 
 	return false;
 }
 
-bool AnyConfig::Anyone::Save(const SaveToFile_Generic_t &aParams)
+bool AnyConfig::CAnyone::Save(const CSaveToFile_General &aParams)
 {
 	const char *pszFilename = aParams.m_pszFilename;
 
-	if(Base::m_aCheckFileExtension.Check(pszFilename))
+	if(CBase::m_aCheckFileExtension.Check(pszFilename))
 	{
-		return Base::Save(aParams);
+		return CBase::Save(aParams);
 	}
-	else if(JSON::m_aCheckFileExtension.Check(pszFilename))
+	else if(CJSON::m_aCheckFileExtension.Check(pszFilename))
 	{
-		return JSON::Save(aParams);
+		return CJSON::Save(aParams);
 	}
-	else if(KeyValues::m_aCheckFileExtension.Check(pszFilename))
+	else if(CKeyValues::m_aCheckFileExtension.Check(pszFilename))
 	{
-		return KeyValues::Save(aParams);
+		return CKeyValues::Save(aParams);
 	}
 
 	const char *pszMessageConcat[] = {"<", "Save", "  Anyone", " to file", ": ", "Unknown file extension", " of ", "\"", pszFilename, "\"", ">"};
 
 	CBufferStringN<256 + MAX_PATH> sMessage;
 
-	sMessage.AppendConcat(ARRAYSIZE(pszMessageConcat), pszMessageConcat, NULL);
+	sMessage.AppendConcatN(pszMessageConcat);
 	*aParams.m_psMessage = sMessage;
 
 	return false;
