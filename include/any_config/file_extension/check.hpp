@@ -26,7 +26,7 @@
 
 #include <array>
 #include <cassert>
-#include <cstring>
+#include <string_view>
 
 namespace AnyConfig
 {
@@ -35,31 +35,27 @@ namespace AnyConfig
 		class ICheck
 		{
 		public:
-			virtual bool Check(const char *pszFilename) = 0;
+			virtual bool Check(std::string_view svFilename) = 0;
 		}; // ICheck
 
 		template<const char *...t_pszExtensions>
 		class CCheck : public ICheck
 		{
-			static constexpr std::array<const char *, sizeof...(t_pszExtensions)> sm_aExtensions = {t_pszExtensions...};
+			static constexpr std::array<std::string_view, sizeof...(t_pszExtensions)> sm_aExtensions = {t_pszExtensions...};
 
 		public: // ICheck
-			bool Check(const char *pszFilename)
+			bool Check(std::string_view svFilename) override
 			{
-				assert(pszFilename);
+				assert(!svFilename.empty());
 
-				for(const char *pszExtension : sm_aExtensions)
+				for(std::string_view svExtension : sm_aExtensions)
 				{
-					std::size_t nFilenameLength = std::strlen(pszFilename);
-
-					std::size_t nExtensionLength = std::strlen(pszExtension);
-
-					if(nFilenameLength < nExtensionLength)
+					if(svFilename.length() < svExtension.length())
 					{
 						continue;
 					}
 
-					if(!std::strcmp(pszFilename + nFilenameLength - nExtensionLength, pszExtension))
+					if(svFilename.substr(svFilename.length() - svExtension.length()) == svExtension)
 					{
 						return true;
 					}
