@@ -31,6 +31,7 @@ namespace AnyConfig
 	class CConfig
 	{
 	private:
+		bool m_bExternalAllocated;
 		KeyValues3 *m_pRoot;
 
 	public:

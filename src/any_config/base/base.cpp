@@ -34,18 +34,23 @@ const KeyValues3 *AnyConfig::CConfig::Get() const
 }
 
 AnyConfig::CConfig::CConfig()
- :  m_pRoot(new KeyValues3(KV3_TYPEEX_INVALID, KV3_SUBTYPE_INVALID))
+ :  m_bExternalAllocated(false), 
+    m_pRoot(new KeyValues3(KV3_TYPEEX_INVALID, KV3_SUBTYPE_INVALID))
 {
 }
 
 AnyConfig::CConfig::CConfig(KeyValues3 *pRoot)
- :  m_pRoot(pRoot)
+ :  m_bExternalAllocated(true), 
+    m_pRoot(pRoot)
 {
 }
 
 AnyConfig::CConfig::~CConfig()
 {
-	delete m_pRoot;
+	if(!m_bExternalAllocated)
+	{
+		delete m_pRoot;
+	}
 }
 
 void AnyConfig::CConfig::DebugPrint()
