@@ -157,6 +157,10 @@ namespace AnyConfig
 
 	class CJSONWriter : public CWriterBase<CConfig>
 	{
+	public:
+		CJSONWriter() = default;
+		CJSONWriter(KeyValues3 *pRoot) : CConfig(pRoot) {}
+
 	public: // IBaseWriter<CSave_General>
 		bool Save(const CSave_General &aParams);
 

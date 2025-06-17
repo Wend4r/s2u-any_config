@@ -188,6 +188,10 @@ namespace AnyConfig
 
 	class CKeyValuesWriter : public CWriterBase<CConfig>
 	{
+	public:
+		CKeyValuesWriter() = default;
+		CKeyValuesWriter(KeyValues3 *pRoot) : CConfig(pRoot) {}
+
 	public: // IBaseWriter<CSave_General>
 		bool Save(const CSave_General &aParams);
 

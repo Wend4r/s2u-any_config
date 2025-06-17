@@ -207,6 +207,10 @@ namespace AnyConfig
 
 	class CJSONReader : public CReaderBase<CConfig>
 	{
+	public:
+		CJSONReader() = default;
+		CJSONReader(KeyValues3 *pRoot) : CConfig(pRoot) {}
+
 	public: // IBaseReader<CLoad_General>
 		bool Load(const CLoad_General &aParams);
 

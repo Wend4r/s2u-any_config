@@ -296,6 +296,10 @@ namespace AnyConfig
 
 	class CKeyValuesReader : public CReaderBase<CConfig>
 	{
+	public:
+		CKeyValuesReader() = default;
+		CKeyValuesReader(KeyValues3 *pRoot) : CConfig(pRoot) {}
+
 	public: // IBaseReader<CLoad_General>
 		bool Load(const CLoad_General &aParams);
 
