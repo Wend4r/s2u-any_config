@@ -39,7 +39,7 @@ namespace AnyConfig
 		FileExtension::CCheck<sm_szFileExtensionJSON> m_aCheckFileExtension;
 	}; // CJSON
 
-	class JSON final : CJSON
+	class JSON final : public CJSON
 	{
 	public:
 		using CJSON::CJSON;

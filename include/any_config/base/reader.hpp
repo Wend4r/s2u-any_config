@@ -398,7 +398,7 @@ namespace AnyConfig
 		}
 	}; // CLoadFromFile_General
 
-	class LoadFromFile_General final : CLoadFromFile_General
+	class LoadFromFile_General final : public CLoadFromFile_General
 	{
 	public:
 		using CBase = CLoadFromFile_General;
