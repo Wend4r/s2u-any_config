@@ -89,7 +89,7 @@ namespace AnyConfig
 		}
 	}; // CLoadBase<T>
 
-	using CLoadBase_t = CLoadBase<Load_t<CKeyValues3Context *, CUtlBuffer *>>;
+	using CLoadBase_t = CLoadBase<Load_t<CKV3Arena *, CUtlBuffer *>>;
 
 	class CLoad : public CLoadBase_t
 	{
@@ -308,10 +308,10 @@ namespace AnyConfig
 		}
 	}; // CLoadFromFileBase<T>
 
-	class CLoadFromFile : public CLoadFromFileBase<CLoadFromFile_t<CKeyValues3Context *>>
+	class CLoadFromFile : public CLoadFromFileBase<CLoadFromFile_t<CKV3Arena *>>
 	{
 	public:
-		using Base_t = CLoadFromFileBase<CLoadFromFile_t<CKeyValues3Context *>>;
+		using Base_t = CLoadFromFileBase<CLoadFromFile_t<CKV3Arena *>>;
 
 		CLoadFromFile(const Base_t::Base_t &aInit)
 		 :  Base_t(aInit)

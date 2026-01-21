@@ -27,7 +27,7 @@
 class CUtlBuffer;
 class CUtlString;
 struct KV3ID_t;
-class CKeyValues3Context;
+class CKV3Arena;
 class KeyValues3;
 
 namespace AnyConfig
